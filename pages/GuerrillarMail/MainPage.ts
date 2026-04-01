@@ -1,6 +1,7 @@
 import { Locator, Page } from "@playwright/test";
 import { Constant } from "../../common/Constant/Constant";
 import { RegistrationConfirmationPage } from "../Railway/RegistrationConfirmationPage";
+import { PasswordResetPage } from "../Railway/PasswordResetPage";
 
 export class MainPage {
     readonly page: Page;
@@ -29,7 +30,7 @@ export class MainPage {
     }
 
     async openMailWithSubject(subject: string){
-        await this.page.getByText(subject, { exact: false }).click()
+        await this.page.getByText(subject, { exact: false }).click({ timeout: 20000 })
     }
 
     async clickLinkConfirm(): Promise<RegistrationConfirmationPage> {
@@ -38,5 +39,13 @@ export class MainPage {
         const newPage = await pagePromise;
         await newPage.waitForLoadState();
         return new RegistrationConfirmationPage(newPage);
+    }
+
+    async clickLinkReset(): Promise<PasswordResetPage>{
+        const pagePromise = this.page.waitForEvent('popup')
+        await this.lnkCofirm.click();
+        const newPage = await pagePromise
+        await newPage.waitForLoadState()
+        return new PasswordResetPage(newPage)
     }
 }

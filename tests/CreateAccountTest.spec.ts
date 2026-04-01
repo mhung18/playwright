@@ -102,7 +102,6 @@ test('TC09: User create and activate account', async ({ page }) => {
     console.log('3. Enter valid information into all fields')
     console.log('4. Click on \"Register\" button');
     let thanksPage = await registerPage.register(userInfo)
-    console.log(userInfo.username);
 
     console.log('VP: \"Thank you for registering your account\" is shown');
     const actualHeader2 = await thanksPage.getSuccessfulMsg()
@@ -116,9 +115,7 @@ test('TC09: User create and activate account', async ({ page }) => {
     await mailbox.setEmailName(Utilities.getEmailName(userInfo.username));
 
     console.log('7. Open email with subject containing \"Please confirm your account\"  and the email of the new account at step 3');
-    const subject = 'Please confirm your account ' + userInfo.username;
-    console.log(subject);
-    
+    const subject = 'Please confirm your account ' + userInfo.username;    
     await mailbox.openMailWithSubject(subject)
 
     console.log('8. Click on the activate link');
