@@ -31,11 +31,19 @@ test('TC10: Reset password shows error if the new password is same as current', 
     console.log('6. Open email with subject contaning \"Please reset your password\" and the email of the account at step 3');
     const subject = 'Please reset your password ' + user.username
     await mailbox.openMailWithSubject(subject)
+    const expectedResetToken = await mailbox.getResetPasswordToken()
+
 
     console.log('7. Click on reset link');
     let resetPasswordPage = await mailbox.clickLinkReset()
 
     console.log('VP: Redirect to Railways page and Form \"Password Change Form\" is shown with the reset password token');
+    const actualFormTitle = await resetPasswordPage.getFormTitle()
+    expect(actualFormTitle).toBe(expectedFormName)
+
+    const actualResetToken = await resetPasswordPage.getResetToken()
+    expect(actualResetToken).toBe(expectedResetToken)
+
     console.log('8. Input same password into 2 fields  \"new password\" and \"confirm password\"');
     console.log('9. Click Reset Password');
     await resetPasswordPage.resetPassword(user.password, user.password)
@@ -70,12 +78,18 @@ test("TC11: Reset password shows error if the new password and confirm password 
     console.log("6. Open email with subject contaning 'Please reset your password' and the email of the account at step 3");
     const subject = 'Please reset your password ' + user.username
     await mailbox.openMailWithSubject(subject)
+    const expectedResetToken = await mailbox.getResetPasswordToken()
 
     console.log("7. Click on reset link");
     let resetPasswordPage = await mailbox.clickLinkReset()
 
     console.log("VP: Redirect to Railways page and Form 'Password Change Form' is shown with the reset password token");
-    // console.log("this is page:" + await page.title())
+    const actualFormTitle = await resetPasswordPage.getFormTitle()
+    expect(actualFormTitle).toBe(expectedFormName)
+
+    const actualResetToken = await resetPasswordPage.getResetToken()
+    expect(actualResetToken).toBe(expectedResetToken)
+
     console.log("8. Input different input into 2 fields 'new password' and 'confirm password'");
     console.log("9. Click Reset Password")
     await resetPasswordPage.resetPassword(user.password, user.password + "test")

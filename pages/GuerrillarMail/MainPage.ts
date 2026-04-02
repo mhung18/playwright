@@ -9,7 +9,7 @@ export class MainPage {
     readonly txtEmailName: Locator
     readonly btnSetEmailName: Locator
     readonly lnkCofirm: Locator
-    // readonly lblEmailConfirm: Locator
+    readonly lblEmailContent: Locator
 
     constructor(page: Page){
         this.page = page;
@@ -17,6 +17,7 @@ export class MainPage {
         this.txtEmailName = page.locator('#inbox-id input')
         this.btnSetEmailName = page.locator('#inbox-id button.save')
         this.lnkCofirm = page.locator('.email_body a')
+        this.lblEmailContent = page.locator(".email_body")
     }
 
     async open(){
@@ -47,5 +48,16 @@ export class MainPage {
         const newPage = await pagePromise
         await newPage.waitForLoadState()
         return new PasswordResetPage(newPage)
+    }
+
+    async getResetPasswordToken():Promise <string> {
+        let emailContent = await this.lblEmailContent.innerText()
+        const regex = /The token is:\s*([^.]+)/;
+        const match = emailContent.match(regex);
+        
+        if (match && match[1]) {
+            return match[1].trim();
+        }
+        throw new Error("Không tìm thấy Reset Token trong nội dung email!");
     }
 }
